@@ -1,10 +1,12 @@
 import { ContainerScrollAnimation } from "@/components/ui/ContainerScrollAnimation";
 import Navbar from "@/components/global/Navbar";
 import { Button } from "@/components/ui/button";
-import InfiniteMovingCards from '@/components/ui/infinite-moving-cards'
-import { clients, products } from '@/lib/constant'
-import { HeroParallax } from '@/components/ui/hero-parallax'
-import { LampComponent, LampContainer } from '@/components/ui/lamp'
+import InfiniteMovingCards from "@/components/ui/infinite-moving-cards";
+import { clients, products } from "@/lib/constant";
+import { HeroParallax } from "@/components/ui/hero-parallax";
+import { LampComponent } from "@/components/ui/lamp";
+import Card from '@/components/global/Card'
+import { cardsData } from '@/lib/data'
 
 export default function Home() {
   return (
@@ -33,16 +35,28 @@ export default function Home() {
         </div>
       </section>
       <InfiniteMovingCards
-      className='md:mt-[18rem] mt-[-100px]'
-      items={clients}
-      direction='right'
-      speed='slow'
+        className="md:mt-[18rem] mt-[-100px]"
+        items={clients}
+        direction="right"
+        speed="slow"
       />
-      <section className=''>
-            <HeroParallax products={products}/>
+      <section className="">
+        <HeroParallax products={products} />
       </section>
-      <section className='mt-[-500px]'>
-              <LampComponent/>
+      <section className="mt-[-500px]">
+        <LampComponent />
+        <div className="flex flex-wrap items-center justify-center flex-col md:flex-row gap-8 -mt-72">
+    {cardsData.map((card, index) => (
+      <Card
+        key={index}
+        title={card.title}
+        price={card.price}
+        description={card.description}
+        features={card.features}
+        buttons={card.buttons}
+      />
+    ))}
+  </div>
       </section>
     </main>
   );
