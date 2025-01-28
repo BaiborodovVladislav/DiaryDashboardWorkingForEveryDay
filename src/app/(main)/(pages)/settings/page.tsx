@@ -1,20 +1,32 @@
-import React from 'react';
-import { db } from '@/lib/db';
-import { currentUser } from '@clerk/nextjs';
-import ProfilePicture from './_components/ProfilePicture'
-import ProfileForm from '@/components/forms/ProfileForms'
-
+import React from "react";
+import { db } from "@/lib/db";
+import { currentUser } from "@clerk/nextjs";
+import ProfilePicture from "./_components/ProfilePicture";
+import ProfileForm from "@/components/forms/ProfileForms";
 
 const Settings = async () => {
   const authUser = await currentUser();
 
   if (!authUser) return null;
 
-  const user = await db.user.findUnique({
+  let user = await db.user.findUnique({
     where: {
       clerkId: authUser.id,
     },
   });
+
+
+  if (!user) {
+    user = await db.user.create({
+      data: {
+        clerkId: authUser.id,
+        name: `${authUser.firstName || "New"} ${authUser.lastName || "User"}`,
+        email: authUser.emailAddresses[0]?.emailAddress || "",
+        profileImage: authUser.profileImageUrl || "",
+      },
+    });
+  }
+
 
   const uploadProfileImage = async (image: string): Promise<void> => {
     "use server";
@@ -28,6 +40,7 @@ const Settings = async () => {
     });
   };
 
+
   const removeProfileImage = async (): Promise<void> => {
     "use server";
     await db.user.update({
@@ -40,14 +53,15 @@ const Settings = async () => {
     });
   };
 
-  const updateUserInformation = async (data: any): Promise<void> => {
+  // Обновление информации о пользователе
+  const updateUserInformation = async (name: string): Promise<void> => {
     "use server";
     await db.user.update({
       where: {
         clerkId: authUser.id,
       },
       data: {
-        ...data,
+        name,
       },
     });
   };
@@ -66,7 +80,7 @@ const Settings = async () => {
         </div>
         <ProfilePicture
           onDelete={removeProfileImage}
-          userImage={user?.profileImage || ''}
+          userImage={user.profileImage || ""}
           onUpload={uploadProfileImage}
         />
         <ProfileForm user={user} onUpdate={updateUserInformation} />

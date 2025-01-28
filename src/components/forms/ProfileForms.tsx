@@ -9,30 +9,31 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 
-
-
 type Props = {
   user: any;
-  onUpdate?: any;
+  onUpdate?: (name: string) => Promise<void>;
 };
 
 const ProfileForm = ({ user, onUpdate }: Props) => {
   const [loading, setLoading] = useState(false);
 
+  // Initialize form with default values, using empty strings as fallbacks
   const form = useForm<z.infer<typeof EditUserProfileSchema>>({
     mode: "onChange",
     resolver: zodResolver(EditUserProfileSchema),
     defaultValues: {
-      name: user?.name, 
-      email: user?.email,
+      name: user?.name || "", // Default to empty string
+      email: user?.email || "", // Default to empty string
     },
   });
 
   const onSubmit = async (values: z.infer<typeof EditUserProfileSchema>) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      await onUpdate(values.name);
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate API call
+      if (onUpdate) {
+        await onUpdate(values.name);
+      }
       alert("Профиль успешно обновлён!");
     } catch (error) {
       console.error("Ошибка при сохранении профиля:", error);
@@ -41,11 +42,14 @@ const ProfileForm = ({ user, onUpdate }: Props) => {
     }
   };
 
+  // Update form values when `user` changes
   useEffect(() => {
-    form.reset({
-      name: user.name,
-      email: user.email,
-    });
+    if (user) {
+      form.reset({
+        name: user.name || "", // Ensure no undefined/null
+        email: user.email || "",
+      });
+    }
   }, [user, form]);
 
   return (
@@ -54,8 +58,8 @@ const ProfileForm = ({ user, onUpdate }: Props) => {
         className="flex flex-col gap-6"
         onSubmit={form.handleSubmit(onSubmit)}
       >
+        {/* Name Field */}
         <FormField
-          disabled={loading}
           control={form.control}
           name="name"
           render={({ field }) => (
@@ -67,12 +71,15 @@ const ProfileForm = ({ user, onUpdate }: Props) => {
                   type="text"
                   className="ml-10"
                   placeholder="Name"
+                  value={field.value || ""} // Ensure value is never undefined
+                  onChange={field.onChange} // Handle onChange explicitly
                 />
               </FormControl>
             </FormItem>
           )}
         />
 
+        {/* Email Field */}
         <FormField
           control={form.control}
           name="email"
@@ -84,14 +91,17 @@ const ProfileForm = ({ user, onUpdate }: Props) => {
                   {...field}
                   type="email"
                   className="ml-10"
+                  placeholder="Email"
+                  value={field.value || ""} // Ensure value is never undefined
+                  onChange={field.onChange} // Handle onChange explicitly
                   disabled={loading}
-                  placeholder="email"
                 />
               </FormControl>
             </FormItem>
           )}
         />
 
+        {/* Submit Button */}
         <Button
           type="submit"
           className="self-start hover:bg-[#2f006b] hover:text-white"
