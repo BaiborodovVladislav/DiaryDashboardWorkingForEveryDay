@@ -16,9 +16,9 @@ import { ModeToggle } from '../global/Mode-toggle'
 
 
 
-type Props = {}
 
-const MenuOptions = (props: Props) => {
+
+const MenuOptions = () => {
   const pathName = usePathname()
 
   return (
