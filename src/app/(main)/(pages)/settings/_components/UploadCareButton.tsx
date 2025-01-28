@@ -3,7 +3,8 @@
 import React, { useEffect, useRef } from 'react';
 import * as LR from '@uploadcare/blocks';
 import { useRouter } from 'next/navigation';
-import '@uploadcare/blocks';
+import { FileUploaderRegular } from '@uploadcare/react-uploader/next';
+import '@uploadcare/react-uploader/core.css';
 
 
 
@@ -12,7 +13,7 @@ type Props = {
   onUpload?: (cdnUrl: string) => Promise<any>;
 };
 
-LR.registerBlocks(LR);
+
 
 const UploadCareButton: React.FC<Props> = ({ onUpload }) => {
   const router = useRouter();
@@ -37,14 +38,13 @@ const UploadCareButton: React.FC<Props> = ({ onUpload }) => {
   }, [onUpload, router]);
 
   return (
-    <>
-      <lr-config ctx-name="my-uploader" pubkey="a9428ff5ff90ae7a64eb" />
-      <lr-file-uploader-regular
-        ctx-name="my-uploader"
-        css-src={`https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.css`}
+    <div>
+      <FileUploaderRegular
+         sourceList="local, url, camera, dropbox"
+         classNameUploader="uc-light"
+         pubkey="912a924c6464207151f3"
       />
-      <lr-upload-ctx-provider ctx-name="my-uploader" ref={ctxProviderRef} />
-    </>
+    </div>
   );
 };
 

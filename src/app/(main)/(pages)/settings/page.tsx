@@ -1,46 +1,56 @@
-import React from "react";
-import ProfileFrom from "@/components/forms/ProfileForms";
+import React from 'react';
+import { db } from '@/lib/db';
+import { currentUser } from '@clerk/nextjs';
 import ProfilePicture from './_components/ProfilePicture'
-import { db } from '@/lib/db'
-import { currentUser } from '@clerk/nextjs'
+import ProfileForm from '@/components/forms/ProfileForms'
+
 
 const Settings = async () => {
+  const authUser = await currentUser();
 
-  const authUser = await currentUser()
-  if(!authUser) return null
+  if (!authUser) return null;
 
-const user = await db.user.findUnique({
-      where:{
+  const user = await db.user.findUnique({
+    where: {
+      clerkId: authUser.id,
+    },
+  });
+
+  const uploadProfileImage = async (image: string): Promise<void> => {
+    "use server";
+    await db.user.update({
+      where: {
         clerkId: authUser.id,
-      }
-    })
+      },
+      data: {
+        profileImage: image,
+      },
+    });
+  };
 
-    const uploadProfileImage = async (image: string) => {
-      "use server"
-      const response = await db.user.update({
-        where:{
-          clerkId: authUser.id,
-        },
-        data:{
-          profileImage: image,
-        }
-      })
-      return response
-    }
+  const removeProfileImage = async (): Promise<void> => {
+    "use server";
+    await db.user.update({
+      where: {
+        clerkId: authUser.id,
+      },
+      data: {
+        profileImage: "",
+      },
+    });
+  };
 
-
-    const removeProfileImage = async () => {
-      "use server"
-      const response = await db.user.update({
-        where:{
-          clerkId: authUser.id,
-        },
-        data:{
-          profileImage: "",
-        }
-      })
-      return response
-    }
+  const updateUserInformation = async (data: any): Promise<void> => {
+    "use server";
+    await db.user.update({
+      where: {
+        clerkId: authUser.id,
+      },
+      data: {
+        ...data,
+      },
+    });
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -54,12 +64,12 @@ const user = await db.user.findUnique({
             Add or update your user profile information
           </p>
         </div>
-        <ProfilePicture 
-        onDelete={removeProfileImage}
-        userImage={user?.profileImage || ''} 
-        onUpload={uploadProfileImage}
+        <ProfilePicture
+          onDelete={removeProfileImage}
+          userImage={user?.profileImage || ''}
+          onUpload={uploadProfileImage}
         />
-	  <ProfileFrom />
+        <ProfileForm user={user} onUpdate={updateUserInformation} />
       </div>
     </div>
   );
