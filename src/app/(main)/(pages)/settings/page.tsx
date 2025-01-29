@@ -53,7 +53,7 @@ const Settings = async () => {
     });
   };
 
-  // Обновление информации о пользователе
+ 
   const updateUserInformation = async (name: string): Promise<void> => {
     "use server";
     await db.user.update({
