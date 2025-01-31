@@ -1,9 +1,9 @@
 import React from "react";
 import Workflow from "./Workflow";
 
-type Props = {};
 
-const Workflows = (props: Props) => {
+
+const Workflows = () => {
   return (
     <div className="relative flex flex-col gap-4">
       <section className="flex flex-col gap-4 p-6">

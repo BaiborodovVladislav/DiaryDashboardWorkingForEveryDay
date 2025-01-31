@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import {
   onCreateNodesEdges,
   onFlowPublish,
-} from '../_actions/workflow-connections'
+} from '../_actions/WorkflowConections'
 import { toast } from 'sonner'
 
 type Props = {

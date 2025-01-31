@@ -7,9 +7,9 @@ import { useModal } from "@/providers/modal-provider";
 import { Plus } from "lucide-react";
 import React from "react";
 
-type Props = {};
 
-const WorkflowButton = (props: Props) => {
+
+const WorkflowButton = () => {
   const { setOpen, setClose } = useModal();
 
   const handleClick = () => {

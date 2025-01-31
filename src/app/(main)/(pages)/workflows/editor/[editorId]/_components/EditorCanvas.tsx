@@ -27,16 +27,15 @@ import { usePathname } from 'next/navigation'
 import { v4 } from 'uuid'
 import { EditorCanvasDefaultCardTypes } from '@/lib/constant'
 import FlowInstance from './FlowInstance'
-import EditorCanvasSidebar from './editor-canvas-sidebar'
-import { onGetNodesEdges } from '../../../_actions/workflow-connections'
+import EditorCanvasSidebar from './EditorCanvasSidebar'
+import { onGetNodesEdges } from '../../../_actions/WorkflowConnection'
 
-type Props = {}
 
 const initialNodes: EditorNodeType[] = []
 
 const initialEdges: { id: string; source: string; target: string }[] = []
 
-const EditorCanvas = (props: Props) => {
+const EditorCanvas = () => {
   const { dispatch, state } = useEditor()
   const [nodes, setNodes] = useState(initialNodes)
   const [edges, setEdges] = useState(initialEdges)
