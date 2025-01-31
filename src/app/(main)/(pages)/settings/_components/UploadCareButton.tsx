@@ -38,13 +38,13 @@ const UploadCareButton: React.FC<Props> = ({ onUpload }) => {
   }, [onUpload, router]);
 
   return (
-    <div>
+    
       <FileUploaderRegular
          sourceList="local, url, camera, dropbox"
          classNameUploader="uc-light"
          pubkey="912a924c6464207151f3"
       />
-    </div>
+    
   );
 };
 

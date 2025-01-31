@@ -9,7 +9,7 @@ export type ConnectionProviderProps = {
     guildName: string
   }
   setDiscordNode: React.Dispatch<React.SetStateAction<any>>
-  googleNode: {}[]
+  googleNode: object[]
   setGoogleNode: React.Dispatch<React.SetStateAction<any>>
   notionNode: {
     accessToken: string
